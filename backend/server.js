@@ -47,22 +47,6 @@ mongoose.connection.on('error', (error) => {
   console.error('MongoDB error:', error);
 });
 
-// 🔍 DEBUG ROUTE — TEMPORARY (VERY IMPORTANT)
-app.get('/debug/operations', async (req, res) => {
-  try {
-    const count = await Operation.countDocuments();
-    const sample = await Operation.find().limit(5);
-
-    res.json({
-      database: mongoose.connection.name,
-      count,
-      sample,
-    });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
 // Health check route
 app.get('/health', (req, res) => {
   res.status(200).json({
