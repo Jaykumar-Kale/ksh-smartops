@@ -4,24 +4,32 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
+// Import models (for debug only)
+const Operation = require('./models/Operation');
+
 // Initialize Express app
 const app = express();
 
 // Configuration
 const PORT = process.env.PORT || 5000;
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/ksh-smartops';
+const MONGODB_URI =
+  process.env.MONGODB_URI || 'mongodb://localhost:27017/ksh-smartops';
 
 // Middleware
-app.use(cors()); // Enable CORS for all routes
-app.use(express.json()); // Parse JSON request bodies
-app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Routes
 const operationsRoutes = require('./routes/operations');
+const analyticsRoutes = require('./routes/analytics');
+
 app.use('/operations', operationsRoutes);
+app.use('/analytics', analyticsRoutes);
 
 // MongoDB Connection
-mongoose.connect(MONGODB_URI)
+mongoose
+  .connect(MONGODB_URI)
   .then(() => {
     console.log('✓ Connected to MongoDB successfully');
   })
@@ -39,17 +47,31 @@ mongoose.connection.on('error', (error) => {
   console.error('MongoDB error:', error);
 });
 
+// 🔍 DEBUG ROUTE — TEMPORARY (VERY IMPORTANT)
+app.get('/debug/operations', async (req, res) => {
+  try {
+    const count = await Operation.countDocuments();
+    const sample = await Operation.find().limit(5);
+
+    res.json({
+      database: mongoose.connection.name,
+      count,
+      sample,
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Health check route
 app.get('/health', (req, res) => {
-  const healthStatus = {
+  res.status(200).json({
     status: 'ok',
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
     mongodb: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
-    environment: process.env.NODE_ENV || 'development'
-  };
-  
-  res.status(200).json(healthStatus);
+    environment: process.env.NODE_ENV || 'development',
+  });
 });
 
 // Root route
@@ -58,16 +80,17 @@ app.get('/', (req, res) => {
     message: 'KSH SmartOps Backend API',
     version: '1.0.0',
     endpoints: {
-      health: '/health'
-    }
+      health: '/health',
+      debug: '/debug/operations',
+    },
   });
 });
 
-// 404 handler for undefined routes
+// 404 handler
 app.use((req, res) => {
   res.status(404).json({
     error: 'Route not found',
-    path: req.path
+    path: req.path,
   });
 });
 
@@ -76,7 +99,7 @@ app.use((err, req, res, next) => {
   console.error('Error:', err.stack);
   res.status(err.status || 500).json({
     error: err.message || 'Internal server error',
-    ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
+    ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
   });
 });
 
@@ -89,13 +112,13 @@ app.listen(PORT, () => {
 
 // Graceful shutdown
 process.on('SIGTERM', () => {
-  console.log('SIGTERM signal received: closing HTTP server');
+  console.log('SIGTERM received: closing server');
   mongoose.connection.close();
   process.exit(0);
 });
 
 process.on('SIGINT', () => {
-  console.log('SIGINT signal received: closing HTTP server');
+  console.log('SIGINT received: closing server');
   mongoose.connection.close();
   process.exit(0);
 });
