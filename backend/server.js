@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const forecastRoutes = require('./routes/forecast');
 
 // Import models (for debug only)
 const Operation = require('./models/Operation');
@@ -26,6 +27,7 @@ const analyticsRoutes = require('./routes/analytics');
 
 app.use('/operations', operationsRoutes);
 app.use('/analytics', analyticsRoutes);
+app.use('/forecast', forecastRoutes);
 
 // MongoDB Connection
 mongoose
