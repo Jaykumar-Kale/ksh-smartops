@@ -2,14 +2,19 @@ import { useEffect, useState } from 'react';
 import api from '../services/api';
 import KPICard from '../components/KPICard';
 import WarehouseChart from '../components/WarehouseChart';
-
+import MonthlyTrendChart from '../components/MonthlyTrendChart';
 
 function Dashboard() {
   const [warehouseData, setWarehouseData] = useState([]);
+  const [monthlyTrend, setMonthlyTrend] = useState([]);
 
   useEffect(() => {
     api.get('/analytics/warehouse')
       .then(res => setWarehouseData(res.data.data))
+      .catch(err => console.error(err));
+
+    api.get('/analytics/monthly-trend?year=2025')
+      .then(res => setMonthlyTrend(res.data.data))
       .catch(err => console.error(err));
   }, []);
 
@@ -41,8 +46,9 @@ function Dashboard() {
         <KPICard title="Warehouses" value={warehouseData.length} />
       </div>
 
-      {/* Raw data (temporary, will replace with charts) */}
-     <WarehouseChart data={warehouseData} />
+      {/* Charts */}
+      <WarehouseChart data={warehouseData} />
+      <MonthlyTrendChart data={monthlyTrend} />
     </div>
   );
 }
