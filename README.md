@@ -38,4 +38,4 @@ While functional, this approach has several limitations:
 ---
 
 ## Project Status
-🚧 Initial setup and architecture planning in progress.
+Initial setup and architecture planning in progress.
