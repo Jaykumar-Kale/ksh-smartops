@@ -16,6 +16,10 @@ app.use(cors()); // Enable CORS for all routes
 app.use(express.json()); // Parse JSON request bodies
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 
+// Routes
+const operationsRoutes = require('./routes/operations');
+app.use('/operations', operationsRoutes);
+
 // MongoDB Connection
 mongoose.connect(MONGODB_URI)
   .then(() => {
