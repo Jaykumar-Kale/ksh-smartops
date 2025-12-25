@@ -5,26 +5,17 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
-} from 'recharts';
+} from "recharts";
 
-function MonthlyTrendChart({ data }) {
-  const formattedData = data.map(item => ({
+const MonthlyTrendChart = ({ data }) => {
+  const formattedData = data.map((item) => ({
     month: `${item.month}/${item.year}`,
     totalOTHours: item.totalOTHours,
-    totalOTAmount: item.totalOTAmount,
   }));
 
   return (
-    <div
-      style={{
-        background: '#ffffff',
-        padding: '20px',
-        borderRadius: '8px',
-        marginTop: '30px',
-      }}
-    >
-      <h3>Monthly OT Trend</h3>
-      <ResponsiveContainer width="100%" height={300}>
+    <div style={{ width: "100%", height: 320 }}>
+      <ResponsiveContainer>
         <LineChart data={formattedData}>
           <XAxis dataKey="month" />
           <YAxis />
@@ -32,12 +23,13 @@ function MonthlyTrendChart({ data }) {
           <Line
             type="monotone"
             dataKey="totalOTHours"
-            strokeWidth={2}
+            stroke="#16a34a"
+            strokeWidth={3}
           />
         </LineChart>
       </ResponsiveContainer>
     </div>
   );
-}
+};
 
 export default MonthlyTrendChart;
