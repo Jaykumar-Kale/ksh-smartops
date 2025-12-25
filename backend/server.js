@@ -4,6 +4,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const forecastRoutes = require('./routes/forecast');
+const authRoutes = require('./routes/auth');
+const { authMiddleware } = require('./middleware/auth');
 
 // Import models (for debug only)
 const Operation = require('./models/Operation');
@@ -25,9 +27,13 @@ app.use(express.urlencoded({ extended: true }));
 const operationsRoutes = require('./routes/operations');
 const analyticsRoutes = require('./routes/analytics');
 
-app.use('/operations', operationsRoutes);
-app.use('/analytics', analyticsRoutes);
-app.use('/forecast', forecastRoutes);
+// Public routes
+app.use('/auth', authRoutes);
+
+// Protected routes (require authentication)
+app.use('/operations', authMiddleware, operationsRoutes);
+app.use('/analytics', authMiddleware, analyticsRoutes);
+app.use('/forecast', authMiddleware, forecastRoutes);
 
 // MongoDB Connection
 mongoose

@@ -47,42 +47,43 @@ function Dashboard() {
   );
 
   return (
-    <div style={{ padding: '32px' }}>
-      <h1>KSH SmartOps Dashboard</h1>
+    <div className="space-y-6">
+      {/* Header Section */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+          <p className="mt-2 text-sm text-gray-600">Welcome to KSH SmartOps Analytics</p>
+        </div>
 
-      {/* Year Filter */}
-      <div style={{ marginBottom: '20px' }}>
-        <label>
-          Year:
-          <select
-            style={{ marginLeft: '10px' }}
-            value={year}
-            onChange={(e) => setYear(e.target.value)}
-          >
-            <option value="2025">2025</option>
-            <option value="2026">2026</option>
-          </select>
-        </label>
+        {/* Year Filter */}
+        <div className="mt-4 sm:mt-0">
+          <label className="flex items-center space-x-2">
+            <span className="text-sm font-medium text-gray-700">Year:</span>
+            <select
+              value={year}
+              onChange={(e) => setYear(e.target.value)}
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+            >
+              <option value="2025">2025</option>
+              <option value="2026">2026</option>
+            </select>
+          </label>
+        </div>
       </div>
 
       {/* KPI Section */}
-      <div
-        style={{
-          display: 'flex',
-          gap: '20px',
-          marginTop: '20px',
-          marginBottom: '30px',
-        }}
-      >
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         <KPICard title="Total OT Hours" value={totalOTHours.toFixed(2)} />
         <KPICard title="Total OT Cost (₹)" value={totalOTAmount.toFixed(2)} />
         <KPICard title="Warehouses" value={warehouseData.length} />
       </div>
 
-      {/* Charts */}
-      <WarehouseChart data={warehouseData} />
-      <MonthlyTrendChart data={monthlyTrend} />
-      <ApprovalStatusChart data={approvalData} />
+      {/* Charts Section */}
+      <div className="space-y-6">
+        <WarehouseChart data={warehouseData} />
+        <MonthlyTrendChart data={monthlyTrend} />
+        <ApprovalStatusChart data={approvalData} />
+      </div>
     </div>
   );
 }
