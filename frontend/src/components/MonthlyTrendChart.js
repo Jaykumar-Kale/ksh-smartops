@@ -5,30 +5,32 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
+  CartesianGrid,
 } from "recharts";
+import "./Charts.css";
 
 const MonthlyTrendChart = ({ data }) => {
-  const formattedData = data.map((item) => ({
-    month: `${item.month}/${item.year}`,
-    totalOTHours: item.totalOTHours,
+  const formatted = data.map(d => ({
+    label: `${d.month}/${d.year}`,
+    hours: d.totalOTHours,
   }));
 
   return (
-    <div style={{ width: "100%", height: 320 }}>
-      <ResponsiveContainer>
-        <LineChart data={formattedData}>
-          <XAxis dataKey="month" />
-          <YAxis />
-          <Tooltip />
-          <Line
-            type="monotone"
-            dataKey="totalOTHours"
-            stroke="#16a34a"
-            strokeWidth={3}
-          />
-        </LineChart>
-      </ResponsiveContainer>
-    </div>
+    <ResponsiveContainer width="100%" height={280}>
+      <LineChart data={formatted}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="label" />
+        <YAxis />
+        <Tooltip />
+        <Line
+          type="monotone"
+          dataKey="hours"
+          stroke="#9BBB59"
+          strokeWidth={3}
+          dot={{ r: 4 }}
+        />
+      </LineChart>
+    </ResponsiveContainer>
   );
 };
 

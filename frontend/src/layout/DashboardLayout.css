@@ -1,8 +1,12 @@
-.layout {
+/* Global layout */
+.app-layout {
   display: flex;
   min-height: 100vh;
+  background: #f4f6f8;
+  font-family: Arial, sans-serif;
 }
 
+/* Sidebar */
 .sidebar {
   width: 240px;
   background: #ffffff;
@@ -19,56 +23,70 @@
 }
 
 .nav-link {
-  padding: 10px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
   color: #333;
   text-decoration: none;
-  margin-bottom: 8px;
   border-radius: 4px;
 }
 
 .nav-link.active {
-  background: #0d6efd;
-  color: #fff;
+  background: #e8f0fe;
+  color: #1a73e8;
+}
+
+.nav-link:hover {
+  background: #f1f1f1;
 }
 
 .logout-btn {
   margin-top: auto;
-  background: none;
-  border: none;
-  color: #dc3545;
   padding: 10px;
-  text-align: left;
+  border: none;
+  background: #e53935;
+  color: white;
   cursor: pointer;
+  border-radius: 4px;
 }
 
-.user-info {
-  margin-top: 20px;
-  font-size: 13px;
+.logout-btn:hover {
+  background: #c62828;
 }
 
-.main-content {
+.user-box {
+  margin-top: 15px;
+  font-size: 12px;
+  color: #555;
+}
+
+/* Main area */
+.main-area {
   flex: 1;
   display: flex;
   flex-direction: column;
 }
 
+/* Top bar */
 .topbar {
-  background: #fff;
-  border-bottom: 1px solid #ddd;
+  background: #ffffff;
   padding: 15px 20px;
+  border-bottom: 1px solid #ddd;
   font-weight: bold;
 }
 
-.content {
-  padding: 20px;
-  background: #f5f6fa;
+/* CONTENT — THIS WAS THE PROBLEM */
+.page-content {
   flex: 1;
+  padding: 25px;
+  background: #f4f6f8;
+  overflow-y: auto;
 }
 
+/* Footer */
 .footer {
-  background: #fff;
-  border-top: 1px solid #ddd;
-  text-align: center;
+  background: #ffffff;
   padding: 10px;
-  font-size: 13px;
+  text-align: center;
+  border-top: 1px solid #ddd;
+  font-size: 12px;
 }

@@ -1,6 +1,6 @@
-import { NavLink, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import './DashboardLayout.css';
+import { NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import "./DashboardLayout.css";
 
 function DashboardLayout({ children }) {
   const { logout, user } = useAuth();
@@ -8,11 +8,12 @@ function DashboardLayout({ children }) {
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    navigate("/login");
   };
 
   return (
-    <div className="layout">
+    <div className="app-layout">
+      {/* Sidebar */}
       <aside className="sidebar">
         <div className="logo">K SmartOps</div>
 
@@ -28,25 +29,26 @@ function DashboardLayout({ children }) {
           Logout
         </button>
 
-        <div className="user-info">
-          <strong>{user?.email}</strong>
+        <div className="user-box">
+          <div className="email">{user?.email}</div>
           <div className="role">{user?.role}</div>
         </div>
       </aside>
 
-      <main className="main-content">
+      {/* Main Area */}
+      <div className="main-area">
         <header className="topbar">
           KSH SmartOps Dashboard
         </header>
 
-        <section className="content">
+        <main className="page-content">
           {children}
-        </section>
+        </main>
 
         <footer className="footer">
           © 2025 KSH SmartOps. All rights reserved.
         </footer>
-      </main>
+      </div>
     </div>
   );
 }

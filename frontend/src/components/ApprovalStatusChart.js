@@ -5,29 +5,29 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import "./Charts.css";
 
-const COLORS = ["#22c55e", "#facc15", "#ef4444"];
+const COLORS = ["#9BBB59", "#F79646", "#C0504D"];
 
 const ApprovalStatusChart = ({ data }) => {
   return (
-    <div style={{ width: "100%", height: 300 }}>
-      <ResponsiveContainer>
-        <PieChart>
-          <Pie
-            data={data}
-            dataKey="operationCount"
-            nameKey="approvalStatus"
-            outerRadius={100}
-            label
-          >
-            {data.map((_, index) => (
-              <Cell key={index} fill={COLORS[index % COLORS.length]} />
-            ))}
-          </Pie>
-          <Tooltip />
-        </PieChart>
-      </ResponsiveContainer>
-    </div>
+    <ResponsiveContainer width="100%" height={280}>
+      <PieChart>
+        <Pie
+          data={data}
+          dataKey="operationCount"
+          nameKey="approvalStatus"
+          innerRadius={60}
+          outerRadius={90}
+          label
+        >
+          {data.map((_, i) => (
+            <Cell key={i} fill={COLORS[i % COLORS.length]} />
+          ))}
+        </Pie>
+        <Tooltip />
+      </PieChart>
+    </ResponsiveContainer>
   );
 };
 

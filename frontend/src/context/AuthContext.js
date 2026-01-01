@@ -1,78 +1,52 @@
-import { createContext, useContext, useEffect, useState } from 'react';
-import api from '../services/api';
+import { createContext, useContext, useState, useEffect } from "react";
+import api from "../services/api";
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // LOGIN
-const login = async (email, password) => {
-  setIsLoading(true);
-  setError(null);
+  // Restore session on refresh
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const savedUser = localStorage.getItem("user");
 
-  try {
-    const res = await api.post('/auth/login', { email, password });
-
-    // ✅ IMPORTANT FIX
-    const { token, user } = res.data.data;
-
-    if (!token || !user) {
-      throw new Error('Invalid login response');
+    if (token && savedUser) {
+      setUser(JSON.parse(savedUser));
     }
 
-    localStorage.setItem('token', token);
+    setLoading(false);
+  }, []);
+
+  // LOGIN
+  const login = async (email, password) => {
+    const res = await api.post("/auth/login", { email, password });
+
+    const { user, token } = res.data.data;
+
+    // Persist auth
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(user));
+
     setUser(user);
-
-    return user;
-  } catch (err) {
-    const message =
-      err.response?.data?.message ||
-      err.message ||
-      'Login failed';
-    setError(message);
-    throw new Error(message);
-  } finally {
-    setIsLoading(false);
-  }
-};
-
+  };
 
   // LOGOUT
   const logout = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
     setUser(null);
   };
-
-  // VERIFY TOKEN
-  const verifyToken = async () => {
-    const token = localStorage.getItem('token');
-    if (!token) return;
-
-    try {
-      const res = await api.get('/auth/me');
-      setUser(res.data.user);
-    } catch {
-      logout();
-    }
-  };
-
-  useEffect(() => {
-    verifyToken();
-    // eslint-disable-next-line
-  }, []);
 
   return (
     <AuthContext.Provider
       value={{
         user,
-        isAuthenticated: !!user,
         login,
         logout,
-        isLoading,
-        error,
+        loading,
+        isAuthenticated: !!user,
       }}
     >
       {children}
@@ -80,6 +54,4 @@ const login = async (email, password) => {
   );
 }
 
-export function useAuth() {
-  return useContext(AuthContext);
-}
+export const useAuth = () => useContext(AuthContext);

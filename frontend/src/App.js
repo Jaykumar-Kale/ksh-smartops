@@ -1,8 +1,19 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
-import Login from './pages/Login';
-import Dashboard from './pages/Dashboard';
-import DashboardLayout from './layout/DashboardLayout';
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider, useAuth } from "./context/AuthContext";
+
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
+import Upload from "./pages/Upload";
+import DashboardLayout from "./layout/DashboardLayout";
+
+function PrivateRoute({ children }) {
+  const { user, loading } = useAuth();
+
+  if (loading) return <div>Loading...</div>;
+  if (!user) return <Navigate to="/login" />;
+
+  return children;
+}
 
 function App() {
   return (
@@ -14,9 +25,22 @@ function App() {
           <Route
             path="/"
             element={
-              <DashboardLayout>
-                <Dashboard />
-              </DashboardLayout>
+              <PrivateRoute>
+                <DashboardLayout>
+                  <Dashboard />
+                </DashboardLayout>
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/upload"
+            element={
+              <PrivateRoute>
+                <DashboardLayout>
+                  <Upload />
+                </DashboardLayout>
+              </PrivateRoute>
             }
           />
         </Routes>

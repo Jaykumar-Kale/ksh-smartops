@@ -1,12 +1,12 @@
-import './KPICard.css';
+import "./KPICard.css";
 
-function KPICard({ title, value }) {
+const KPICard = ({ title, value }) => {
   return (
     <div className="kpi-card">
-      <div className="kpi-title">{title}</div>
-      <div className="kpi-value">{value}</div>
+      <p className="kpi-title">{title}</p>
+      <h3 className="kpi-value">{value}</h3>
     </div>
   );
-}
+};
 
 export default KPICard;
